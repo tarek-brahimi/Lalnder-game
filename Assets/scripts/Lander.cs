@@ -1,7 +1,6 @@
-using System;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Lander : MonoBehaviour
 {
@@ -30,6 +29,8 @@ public class Lander : MonoBehaviour
             landerRigidbody2D.AddTorque(turnSpeeed * Time.deltaTime);
         }
     }
+
+
     private void OnCollisionEnter2D(Collision2D collision2D)
     {
         if (!collision2D.gameObject.TryGetComponent(out LandingPad landingPad))
@@ -42,7 +43,7 @@ public class Lander : MonoBehaviour
         float relativeVelocityMagnitude =collision2D.relativeVelocity.magnitude;
         if (softLanding < relativeVelocityMagnitude )
         {
-            Debug.Log("crash");
+            Debug.Log("land too hard");
             return;
         }
         float dotVector = Vector2.Dot(Vector2.up, transform.up);
@@ -55,10 +56,14 @@ public class Lander : MonoBehaviour
         Debug.Log("sucss");
         float maxScoreAmountlandingAngel = 100;
         float scoreDotvectorMultipliar = 10f ;
-        float ScoreAmountlandingAngel = maxScoreAmountlandingAngel - MathF.Abs(dotVector-1f)            *scoreDotvectorMultipliar*maxScoreAmountlandingAngel;
+        float ScorelandingAngel = maxScoreAmountlandingAngel - Mathf.Abs(dotVector-1f) * scoreDotvectorMultipliar*maxScoreAmountlandingAngel;        
          float maxScoreAmountlandingSpeed = 100;
         float landigSpeedScore = (softLanding - relativeVelocityMagnitude )*maxScoreAmountlandingSpeed;
-        Debug.Log(ScoreAmountlandingAngel);
-         Debug.Log(landigSpeedScore);
+         Debug.Log( "landing angel :"+ScorelandingAngel);
+         Debug.Log("speed:"+landigSpeedScore);
+
+         int Score = Mathf.RoundToInt((landigSpeedScore+ScorelandingAngel)*landingPad.GetScoreMultpilare());
+         Debug.Log("score:"+Score);
+      
     }
 }
